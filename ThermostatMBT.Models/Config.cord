@@ -1,0 +1,32 @@
+// A simple thermostat model using C# model definitions
+
+config Main 
+{
+    // Use all actions from implementation (adapter) class
+    action all ThermostatMBT.Implementations.ThermostatImplementation;
+
+    switch StepBound = none;
+    switch PathDepthBound = none;
+    switch StateBound = 250;
+
+    switch TestClassBase = "vs";
+    switch GeneratedTestPath = "..\\ThermostatMBT.TestSuites";
+    switch GeneratedTestNamespace = "ThermostatMBT.TestSuites";
+    switch TestEnabled = false;
+    switch ForExploration = false;
+}
+
+// Model for simulating thermostat operations
+machine ThermostatModel() : Main where ForExploration = true
+{
+    construct model program from Main
+    where scope = "ThermostatMBT.Models.ThermostatModel"
+}
+
+// Test suite
+machine ThermostatTestSuite() : Main where ForExploration = true, TestEnabled = true
+{
+    construct test cases
+    where strategy = "ShortTests"
+    for ThermostatModel()
+}
